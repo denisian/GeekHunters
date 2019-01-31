@@ -1,0 +1,60 @@
+﻿@using System.Data.SqlClient
+@model IEnumerable<GeekHunter.Models.Candidate>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<br />
+<h3>Candidate List</h3>
+<hr />
+<p>
+    @Html.ActionLink("Register a new candidate", "Register", null, null, new { @class = "btn btn-sm btn-primary" })
+</p>
+<br />
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Get))
+{
+<p>
+    Search by skill: @Html.TextBox("searchSkill", ViewBag.CurrentFilter as string)
+    <input type="submit" value="Find" class="btn btn-sm btn-primary" />
+    @Html.ActionLink("Back to full list", "Index", null, null, new { currentFilter = "", @class = "btn btn-sm btn-success" })
+</p>
+}
+
+<div class="form-border">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.ActionLink("First Name", "Index", new {sortOrder = ViewBag.FirstNameSort, currentFilter = ViewBag.CurrentFilter})
+            </th>
+            <th>
+                @Html.ActionLink("Last Name", "Index", new {sortOrder = ViewBag.LastNameSort, currentFilter = ViewBag.CurrentFilter })
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Skills)
+            </th>
+        </tr>
+        @foreach (var candidate in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(m => candidate.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(m => candidate.LastName)
+            </td>
+            <td>
+                @foreach (var skill in candidate.Skills)
+                {
+                    @Html.DisplayFor(s => skill.Skill.Name);
+                    <p></p>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { candidateId = candidate.Id }, new { @class = "btn btn-sm btn-danger" })
+            </td>
+        </tr>
+        }
+    </table>
+</div>

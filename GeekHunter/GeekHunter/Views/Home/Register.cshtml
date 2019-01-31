@@ -1,0 +1,55 @@
+﻿@using System.Collections
+@model GeekHunter.ViewModels.CandidateSkillViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<br />
+<h2>Register a new candidate</h2>
+<hr />
+
+<form asp-action="Register">
+    <div class="row form-border">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <p>
+                <div class="row">
+                    <div class="col-sm-1">
+                        <label asp-for="@Model.Candidate.FirstName"></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input asp-for="@Model.Candidate.FirstName" class="form-control" />
+                    </div>
+                </div>
+                <span asp-validation-for="@Model.Candidate.FirstName" class="text-danger"></span>
+            </p>
+            <p>
+                <div class="row">
+                    <div class="col-sm-1">
+                        <label asp-for="@Model.Candidate.LastName"></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input asp-for="@Model.Candidate.LastName" class="form-control" />
+                    </div>
+                </div>
+                <span asp-validation-for="@Model.Candidate.LastName" class="text-danger"></span>
+            </p>
+            <p>
+                <div class="row">
+                    <div class="col-sm-1">
+                        <label>Skill</label>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(m => m.SkillId, new SelectList(ViewBag.skills, "Id", "Name"), new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.SkillId, "", new { @style = "color:red" })
+                    </div>
+                </div>
+            </p>
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Register" class="btn btn-sm btn-primary" />
+            <input type="submit" asp-action="Index" value="Back to list" class="btn btn-sm btn-success" />
+        </div>  
+    </div>
+</form>

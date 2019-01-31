@@ -1,0 +1,40 @@
+﻿@model GeekHunter.Models.Candidate
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<br />
+<h2>Are you sure you want to delete this candidate?</h2>
+<hr />
+
+<form asp-action="Delete">
+    <div class="row form-border">
+        <div class="form-group">
+            <p>
+                <div class="row">
+                    <div class="col-sm-1">
+                        <label asp-for="@Model.FirstName"></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input asp-for="@Model.FirstName" readonly class="form-control" />
+                    </div>
+                </div>
+            </p>
+            <p>
+                <div class="row">
+                    <div class="col-sm-1">
+                        <label asp-for="@Model.LastName"></label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input asp-for="@Model.LastName" readonly class="form-control" />
+                    </div>
+                </div>
+            </p>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Delete" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-danger"/>
+            <input type="submit" asp-action="Index" value="Back to list" class="btn btn-sm btn-success"/>
+        </div>
+    </div>
+</form>
