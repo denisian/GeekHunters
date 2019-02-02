@@ -65,11 +65,21 @@ namespace GeekHunter.Controllers
         }
 
         // GET: Candidate/Register
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
-            var skills = _db.Skills.ToList();
-            ViewBag.skills = skills;
-         
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var skills = await _db.Skills.ToListAsync();
+                    ViewBag.skills = skills;
+                }
+            }
+            catch (DataException dex)
+            {
+                return Content(dex.Message);
+            }
+
             return View();
         }
 
@@ -78,12 +88,16 @@ namespace GeekHunter.Controllers
         {
             try
             {
+                // Repopulate ViewBag to avoid NullException
+                var skills = await _db.Skills.ToListAsync();
+                ViewBag.skills = skills;
+
+                if (candidateSkill == null)
+                    NotFound();
+
                 if (ModelState.IsValid)
                 {
-                    if (candidateSkill == null)
-                        NotFound();
-
-                    _db.Add(candidateSkill);
+                    await _db.AddAsync(candidateSkill);
                     await _db.SaveChangesAsync();
                 }
                 else
@@ -98,13 +112,13 @@ namespace GeekHunter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Candidate/Delete/5
-        public IActionResult Delete(int? candidateId)
+        // GET: Candidate/Delete?candidateId=5
+        public async Task<IActionResult> Delete(int? candidateId)
         {
             if (candidateId == null)
                 return NotFound();
 
-            var candidate =  _db.Candidates.SingleOrDefault(c => c.Id == candidateId);
+            var candidate =  await _db.Candidates.SingleOrDefaultAsync(c => c.Id == candidateId);
             if (candidate == null)
                 return NotFound();
 
@@ -112,13 +126,13 @@ namespace GeekHunter.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var candidate = _db.Candidates.SingleOrDefault(c => c.Id == id);
+                    var candidate = await _db.Candidates.SingleOrDefaultAsync(c => c.Id == id);
                     //var candidateSkill = _db.CandidateSkills.Where(c => c.CandidateId == id).Select(c => c.CandidateId);
 
                     if (candidate == null)
@@ -126,7 +140,7 @@ namespace GeekHunter.Controllers
 
                     _db.Remove(candidate);
                     //_db.Remove(candidateSkill);
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                 }
                 else
                 {
